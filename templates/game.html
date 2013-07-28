@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Fizz Buzz</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<div class="container top">
+			<div class="title">
+				<center><h1>Fizz Buzz Game</h1></center>
+			</div>
+			<canvas id="canvas"></canvas>
+			
+			<center>
+				<button id="btn" type="button" value="fizz" onclick="button_check(value)">Fizz</button>
+				<button id="btn" type="button" value="buzz" onclick="button_check(value)">Buzz</button>
+				<button id="btn" type="button" value="fizzbuzz" onclick="button_check(value)">FizzBuzz</button>
+				<button id="btn" type="button" value="number" onclick="button_check(value)"><i>i</i></button>
+				<button id="btn" type="button" onclick="reset()">Restart</button>
+			
+			</center>
+
+		</div>
+
+		<footer class="footer">
+			<div class="container">
+				<center><p>Made with <span class="heart">&hearts;</span> by Timur Ridjanovic!</p></center>
+			</div>
+		</footer>	
+		<script type="text/javascript" src="/js/core.js"></script>
+		<script type="text/javascript" src="/js/gamelogic.js"></script>
+		<script type="text/javascript" src="/js/fizzbuzz.js"></script>
+		
+	</body>
+</html>
