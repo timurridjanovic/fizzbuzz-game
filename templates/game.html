@@ -1,10 +1,26 @@
+{% if user %}
+
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Fizz Buzz</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<script>
+  			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  			ga('create', 'UA-42763752-1', 'fizzbuzzgame.appspot.com');
+  			ga('send', 'pageview');
+
+		</script>
+		<script>var username = "{{username}}"</script>
 	</head>
 	<body>
+		<div class="menu-container">
+			<div class="logout"><h3>{{username}}(<a class="link1" href="/logout">logout</a>)</h3></div>
+		</div>
 		<div class="container top">
 			<div class="title">
 				<center><h1>Fizz Buzz Game</h1></center>
@@ -16,20 +32,152 @@
 				<button id="btn" type="button" value="buzz" onclick="button_check(value)">Buzz</button>
 				<button id="btn" type="button" value="fizzbuzz" onclick="button_check(value)">FizzBuzz</button>
 				<button id="btn" type="button" value="number" onclick="button_check(value)"><i>i</i></button>
-				<button id="btn" type="button" onclick="reset()">Restart</button>
+				<div>
+					<p>
+					<button id="btn" type="button" onclick="reset()">Restart</button>
+					<button id="btn" type="button" onclick="viewHighScores()">View High Scores</button>
+					</p>
+				</div>
 			
 			</center>
 
+
+		</div>
+		<!-- HIGH SCORES OVERLAY
+		======================================================================================================================-->
+		<div id="highScoresOverlay">
+     			<div class="modal-box">
+          			<h3>Top 20 Best High Scores...</h3>
+					<center>
+						<div id="highscores">
+							<div id="loadingImage" style="display: none">
+								<img src="/images/ajax-loader.gif"/>
+							</div>
+						</div>
+					</center>
+					<button id="close-button-highscores" type="button" value="close" onclick="closeHighScoresOverlay()">X</button>
+     			</div>
 		</div>
 
+		<!-- FOOTER
+		======================================================================================================================-->
 		<footer class="footer">
 			<div class="container">
-				<center><p>Made with <span class="heart">&hearts;</span> by Timur Ridjanovic!</p></center>
+				<center><p>Made with <span class="heart">&hearts;</span> by Timur Ridjanovic! <a href="https://github.com/timurridjanovic/fizzbuzz-game" target="_blank">Source @ github</a></p></center>
 			</div>
-		</footer>	
+		</footer>
+
+		<!-- hidden highscore template variable
+		======================================================================================================================-->
+		<input type="hidden" id="highscore" name="highscore" value="{{highscore}}">
+
+	
+		<!-- SCRIPTS
+		======================================================================================================================-->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/core.js"></script>
 		<script type="text/javascript" src="/js/gamelogic.js"></script>
 		<script type="text/javascript" src="/js/fizzbuzz.js"></script>
+		<script>setup();</script>
+
+
+		
 		
 	</body>
 </html>
+
+
+{% else %}
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Fizz Buzz</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<script>var username = "{{username}}"</script>
+	</head>
+	<body>
+		<div class="menu-container">
+			<div class="logout"><h3><a class="link1" href="/game">Login</a> | <a class="link1" href="/signup">Signup</a></h3></div>
+		</div>
+		<div class="container top">
+			<div class="title">
+				<center><h1>Fizz Buzz Game</h1></center>
+			</div>
+			<canvas id="canvas"></canvas>
+			
+			<center>
+				<button id="btn" type="button" value="fizz" onclick="button_check(value)">Fizz</button>
+				<button id="btn" type="button" value="buzz" onclick="button_check(value)">Buzz</button>
+				<button id="btn" type="button" value="fizzbuzz" onclick="button_check(value)">FizzBuzz</button>
+				<button id="btn" type="button" value="number" onclick="button_check(value)"><i>i</i></button>
+				<div>
+					<p>
+					<button id="btn" type="button" onclick="reset()">Restart</button>
+					<button id="btn" type="button" onclick="viewHighScores()">View High Scores</button>
+					</p>
+				</div>
+			
+			</center>
+
+
+		</div>
+
+		<!-- LOGIN OVERLAY
+		======================================================================================================================-->
+		<div id="overlay">
+     			<div class="modal-box">
+          			<form method="post">
+					<label><h3>Please enter your name and password to login...</h3></label>
+					<center>
+						<input type="text" placeholder="username..." maxlength="20" name="login_username"/> 
+						<div class="error">{{login_error}}</div>
+						<input type="password" placeholder="password..." maxlength="20" name="login_password"/>
+						<input type="submit" value="Submit" class="btn small"/>
+					</center>
+					<button id="close-button" type="button" value="close" onclick="closeOverlay()">X</button>
+					<div id='error'></div>
+					<hr>
+					<button id="or-button" type="button" disabled>OR</button>
+					<button id="signupbutton" type="button" value="Sign up" onclick="window.location.href='/signup'">Sign up</button>
+				</form>
+     			</div>
+		</div>
+
+		<!-- HIGH SCORES OVERLAY
+		======================================================================================================================-->
+		<div id="highScoresOverlay">
+     			<div class="modal-box">
+          			<h3>Top 20 Best High Scores...</h3>
+					<center>
+						<div id="highscores">
+							<div id="loadingImage" style="display: none">
+								<img src="/images/ajax-loader.gif"/>
+							</div>
+						</div>
+					</center>
+					<button id="close-button-highscores" type="button" value="close" onclick="closeHighScoresOverlay()">X</button>
+     			</div>
+		</div>
+
+		<!-- FOOTER
+		======================================================================================================================-->
+		<footer class="footer">
+			<div class="container">
+				<center><p>Made with <span class="heart">&hearts;</span> by Timur Ridjanovic! <a href="https://github.com/timurridjanovic/fizzbuzz-game" target="_blank">Source @ github</a></p></center>
+			</div>
+		</footer>
+
+		<!-- SCRIPTS
+		======================================================================================================================-->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/core.js"></script>
+		<script type="text/javascript" src="/js/gamelogic.js"></script>
+		<script type="text/javascript" src="/js/fizzbuzz.js"></script>
+		<script>overlay()</script>
+	</body>
+</html>
+
+{% endif %}
+

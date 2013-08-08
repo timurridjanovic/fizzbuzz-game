@@ -1,3 +1,5 @@
+
+
 var GameLogicClass = Class.extend({
 	
 	//dictionary containing fizzbuzz numbers and solutions
@@ -13,8 +15,15 @@ var GameLogicClass = Class.extend({
 
 	missed: 0,
 
-	highscore: 0
+	highscore: 0,
+
+	username: 'anonymous',
+
+	interval: 0
 	
 
 
 })
+
+
+var gameLogic = new GameLogicClass();

@@ -1,9 +1,11 @@
-var gameLogic = new GameLogicClass();
-
 
 setup = function() {
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
+	
+	if (username) {
+		gameLogic.username = username;
+	}
 	
 	canvas.width  = 960;
 	canvas.height = 480;
@@ -11,6 +13,13 @@ setup = function() {
 	gameLogic.x = canvas.width/2;
 	gameLogic.y = 0;
 	gameLogic.frameRate = 40;
+	var highscore = document.getElementById("highscore");
+
+	if (highscore !== null) {
+		if (highscore.value > gameLogic.highscore) {
+			gameLogic.highscore = highscore.value;
+		}
+	}
 
 	// Let's create our dictionary of fizzbuzz numbers and solutions and our list of random numbers to be displayed on the canvas
 	for (var i=1; i<101; i++) {
@@ -20,15 +29,21 @@ setup = function() {
 		else {gameLogic.numbers[i] = 'number';}
 		gameLogic.randomNumbers.push(new create_number());
 	}
+	startGame(ctx);
 
-	var interval = setInterval(function () {
+}
+
+
+startGame = function(ctx) {
+	gameLogic.interval = setInterval(function () {
 		drawNumbers(ctx);
 		drawScoreBoard(ctx);
 		if (gameLogic.missed >= 10) {
 			gameOver(ctx);
-			clearInterval(interval);
+			clearInterval(gameLogic.interval);
 		}
 	}, gameLogic.frameRate);
+
 }
 
 
@@ -105,7 +120,9 @@ newNumber = function() {
 gameOver = function(ctx) {
 	if (gameLogic.score > gameLogic.highscore) {
 		gameLogic.highscore = gameLogic.score;
+		ajaxScoreUpdate(gameLogic.score);
 	}
+	gameLogic.gameover = 1;
 	clear_canvas(ctx);
 	ctx.font = "bold 50px Arial Black";
 	ctx.fillText('GAME OVER', 290, 170);
@@ -114,10 +131,85 @@ gameOver = function(ctx) {
 	
 }
 
+
+ajaxScoreUpdate = function(score) {
+	$.ajax({
+		type: 'POST',
+		url: "/ajax",
+		data: {
+			highscore: score,
+			username: username
+		},
+		success: showData
+	});
+}
+
+
+showData = function(data) {
+	console.log(data);
+
+}
+
+
+
 reset = function() {
 	gameLogic.score = 0;
 	gameLogic.missed = 0;
+	gameLogic.randomNumbers = [];
+	gameLogic.iterator = 0;
+	gameLogic.reset = 1;
+	clearInterval(gameLogic.interval);
 	setup();
 }
 
-setup();
+
+overlay = function () {
+	var el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+
+
+closeOverlay = function () {
+	overlay();
+	setup();		
+}
+
+closeHighScoresOverlay = function () {
+	var el = document.getElementById("highScoresOverlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+
+	$("#highscores").empty();	
+}
+
+
+viewHighScores = function() {
+	var el = document.getElementById("highScoresOverlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+
+	$("#loadingImage").show();
+
+	$.ajax({
+		type: 'POST',
+		url: "/highscores",
+		data: {request: 'requesting top 20 high scores'},
+		success: showHighScores,
+		error: function(xhr, status) {
+			$("#loadingImage").hide();
+			alert('Unknown error ' + status);
+		}
+	});
+
+}
+
+showHighScores = function(response) {
+	$("#loadingImage").hide();
+	r = JSON.parse(response);
+	console.log(r.result);
+	for (var i=1; i < r.result.length+1; i++) {
+		$("#highscores").append("<div id='highscoresBox'>" + '#' + i + '  ' + r.result[i-1] + ' points' + "</div>");
+	}
+
+	
+}
+
+
