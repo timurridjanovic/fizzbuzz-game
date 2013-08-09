@@ -73,7 +73,7 @@ class Game(Index):
 		if u.highscore:
 			memcache.set(username+' highscore', u.highscore)
 			highscore = u.highscore
-			logging.error(highscore + ' just set in memcache')
+			logging.error('just set highscore in memcache')
 	    
             self.render('game.html', user = self.user, username = username, highscore = highscore)  
         else:
