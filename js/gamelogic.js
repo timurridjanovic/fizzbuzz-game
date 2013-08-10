@@ -6,7 +6,7 @@ var GameLogicClass = Class.extend({
 	numbers: {},
 
 	//list containing the random numbers with their velocities (numbers to be displayed on the canvas)
-	randomNumbers: [],
+	randomNumbers: {1:[]},
 
 	//Number iterator to go through the random number list
 	iterator: 0,
@@ -19,9 +19,11 @@ var GameLogicClass = Class.extend({
 
 	username: 'anonymous',
 
-	interval: 0
-	
+	interval: 0,
 
+	level: 1,
+
+	scoreMarker: 0
 
 })
 
