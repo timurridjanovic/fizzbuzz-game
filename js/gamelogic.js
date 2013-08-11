@@ -23,7 +23,11 @@ var GameLogicClass = Class.extend({
 
 	level: 1,
 
-	scoreMarker: 0
+	scoreMarker: 0,
+
+	greenLight: 0,
+
+	redLight: 0
 
 })
 

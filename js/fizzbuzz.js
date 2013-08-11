@@ -42,6 +42,7 @@ startGame = function(ctx) {
 	gameLogic.interval = setInterval(function () {
 		drawNumbers(ctx);
 		drawScoreBoard(ctx);
+		drawLights(ctx);
 		if (gameLogic.missed >= 10) {
 			gameOver(ctx);
 			clearInterval(gameLogic.interval);
@@ -81,6 +82,35 @@ drawScoreBoard = function(ctx) {
 }
 
 
+drawLights = function(ctx, color) {
+	if (gameLogic.gameover !== 1) {
+		color = color || 'default';
+
+		// drawing light
+		ctx.beginPath();
+		ctx.arc(930, 25, 15, 0, 2*Math.PI, false);
+		if (color === 'green' || (gameLogic.greenLight < 10 && gameLogic.greenLight > 0)) {
+			ctx.fillStyle = 'green';
+			gameLogic.greenLight += 1;
+		}
+		else if (color === 'red' || (gameLogic.redLight < 10 && gameLogic.redLight > 0)) {
+			ctx.fillStyle = 'red';
+			gameLogic.redLight += 1;
+		}
+		else {
+			ctx.fillStyle = '#E5E8EF';
+			gameLogic.greenLight = 0;
+			gameLogic.redLight = 0;
+		}
+		ctx.fill();
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = '#444857';
+		ctx.stroke();
+	}
+
+}
+
+
 createLevel = function(level) {
 	gameLogic.randomNumbers[level] = [];
 	for (var i = 0; i < 20; i++) {
@@ -103,6 +133,8 @@ clearCanvas = function(ctx) {
 
 
 buttonCheck = function(name) {
+	var ctx = canvas.getContext('2d');
+	var color;
 	var level = gameLogic.level;
 	var number = gameLogic.randomNumbers[level][gameLogic.iterator].number;
 	
@@ -111,9 +143,13 @@ buttonCheck = function(name) {
 	if (solution == name) {
 		gameLogic.score += 1;
 		newNumber(level);
+		color = 'green';
+		drawLights(ctx, color);
 	}
 	else {
 		gameLogic.missed += 1;
+		color = 'red';
+		drawLights(ctx, color);
 	}
 	
 	if (gameLogic.score >= gameLogic.scoreMarker+10) {
@@ -144,6 +180,7 @@ gameOver = function(ctx) {
 	gameLogic.gameover = 1;
 	clearCanvas(ctx);
 	ctx.font = "bold 50px Arial Black";
+	ctx.fillStyle = '#444857';
 	ctx.fillText('GAME OVER', 290, 170);
 	ctx.fillText('SCORE: '+ gameLogic.score, 290, 270);
 	ctx.fillText('HIGH SCORE: '+ gameLogic.highscore, 290, 220);
@@ -177,6 +214,9 @@ reset = function() {
 	gameLogic.iterator = 0;
 	gameLogic.level = 1;
 	gameLogic.scoreMarker = 0;
+	gameLogic.gameover = 0;
+	gameLogic.greenLight = 0;
+	gameLogic.redLight = 0;
 	gameLogic.reset = 1;
 	clearInterval(gameLogic.interval);
 	setup();
