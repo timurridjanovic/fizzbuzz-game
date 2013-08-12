@@ -156,7 +156,6 @@ buttonCheck = function(name) {
 		gameLogic.scoreMarker = gameLogic.score;
 		gameLogic.level += 1;
 		gameLogic.iterator = 0;
-		createLevel(gameLogic.level);
 		createLevel(gameLogic.level+1);
 	}
 
