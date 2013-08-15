@@ -115,7 +115,7 @@ class HighScores(Index):
 		logging.error(request)
 		results = Users.all().order('-highscore')
 		result = []
-		for r in results.run(limit=21):
+		for r in results.run(limit=20):
 			result.append(str(r.username) + ': ' + str(r.highscore))
 		logging.error(result)
 		self.response.out.write(json.dumps({'result': result}))
