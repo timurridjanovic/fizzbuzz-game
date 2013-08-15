@@ -70,7 +70,7 @@ class Game(Index):
 	    if not highscore:
 	    	u = Users.all().filter('username =', username).get()
 		highscore = 0
-		if u.highscore:
+		if u.highscore is not None:
 			memcache.set(username+' highscore', u.highscore)
 			highscore = u.highscore
 			logging.error('just set highscore in memcache')
